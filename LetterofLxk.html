@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>生日祝福信笺</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #e6f7ff 0%, #f8e1ff 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .letter {
+            background-color: #fff8dc;
+            width: 60%;
+            max-width: 500px;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            position: relative;
+            animation: fadeIn 1s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .letter p {
+            font-size: 20px;
+            line-height: 1.6;
+            color: #333;
+        }
+
+        .letter .signature {
+            text-align: right;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="letter">
+        <p>愿你的每一岁都能活在自己的热爱里，念念不忘，必有回响！希望你在新的一岁里，与世间美好环环相扣。</p>
+        <p>新岁与考程同路，愿平安顺遂，落笔皆所愿，金榜有你名！</p>
+        <p class="signature">钟京宏</p>
+        <p class="signature">2025.6.1</p>
+    </div>
+</body>
+
+</html>
+    

@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>生日快乐！</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(-45deg, #ff9a9e, #fad0c4, #fbc2eb, #a6c1ee);
+            background-size: 400% 400%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+            animation: gradientBG 15s ease infinite;
+        }
+
+        @keyframes gradientBG {
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        #bubbles-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 2;
+            pointer-events: none;
+        }
+
+        #fireworks-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .content-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 40px;
+            z-index: 3;
+            width: 100%;
+            max-width: 800px;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .text-container {
+            z-index: 3;
+            text-align: center;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            padding: 15px 30px;
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            width: 70%;
+            max-width: 500px;
+        }
+
+        .cake-container {
+            text-align: center;
+            z-index: 4;
+            padding: 20px;
+            position: relative;
+            margin-top: 33px;
+        }
+
+        .cake {
+            position: relative;
+            width: 280px;
+            height: 180px;
+            margin: 0 auto;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .cake:hover {
+            transform: scale(1.05);
+        }
+
+        .cake-top {
+            position: absolute;
+            top: 0;
+            left: 40px;
+            width: 200px;
+            height: 50px;
+            background-color: #f7d794;
+            border-radius: 50%;
+            box-shadow: inset -15px -15px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .cake-body {
+            position: absolute;
+            top: 25px;
+            left: 50px;
+            width: 180px;
+            height: 120px;
+            background-color: #f7d794;
+            border-radius: 15px;
+            background: repeating-linear-gradient(
+                45deg,
+                #f7d794,
+                #f7d794 10px,
+                #f5c87d 10px,
+                #f5c87d 20px
+            );
+        }
+
+        .icing {
+            position: absolute;
+            top: 0;
+            left: 40px;
+            width: 200px;
+            height: 25px;
+            background-color: #ffffff;
+            border-radius: 50%;
+            box-shadow: inset -8px -8px 15px rgba(0, 0, 0, 0.1);
+            z-index: 2;
+        }
+
+        .candle {
+            position: absolute;
+            width: 15px;
+            height: 60px;
+            background: linear-gradient(to bottom, #ff6b6b, #ff8e8e);
+            bottom: 180px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-radius: 8px;
+            box-shadow: inset -5px -5px 10px rgba(0, 0, 0, 0.1);
+            z-index: 4;
+        }
+
+        .flame {
+            position: absolute;
+            width: 18px;
+            height: 35px;
+            background: linear-gradient(to bottom, #ffbe76, #ff9f43);
+            top: -35px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+            animation: flame-flicker 1s ease-in-out infinite alternate;
+            box-shadow: 0 0 15px rgba(255, 190, 118, 0.8);
+            filter: blur(1px);
+        }
+
+        @keyframes flame-flicker {
+            0%, 100% {
+                transform: translateX(-50%) scale(1);
+            }
+            25% {
+                transform: translateX(-50%) scale(0.9) rotate(-5deg);
+            }
+            50% {
+                transform: translateX(-50%) scale(1.1);
+            }
+            75% {
+                transform: translateX(-50%) scale(0.95) rotate(5deg);
+            }
+        }
+
+        /* 糖珠样式 */
+        .sprinkle {
+            position: absolute;
+            width: 6px;
+            height: 15px;
+            border-radius: 50%;
+            box-shadow: inset -2px -2px 3px rgba(0, 0, 0, 0.1);
+            z-index: 3;
+        }
+
+        /* 星星样式 */
+        .star {
+            position: absolute;
+            width: 5px;
+            height: 5px;
+            background-color: #ffd700;
+            border-radius: 50%;
+            animation: star-fall 5s linear infinite;
+            pointer-events: none;
+        }
+
+        @keyframes star-fall {
+            0% {
+                top: -10%;
+                left: calc(10% + 80% * Math.random());
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                top: 100%;
+                left: calc(10% + 80% * Math.random());
+                opacity: 0;
+            }
+        }
+
+        /* 泡泡样式 */
+        .bubble {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.8);
+            box-shadow: inset -5px -5px 10px rgba(0, 0, 0, 0.1);
+            animation: bubble-rise 8s ease-in-out forwards, bubble-sway 3s ease-in-out infinite alternate;
+            pointer-events: none;
+        }
+
+        @keyframes bubble-rise {
+            from {
+                bottom: -20px;
+                opacity: 0;
+                transform: scale(0.5);
+            }
+            to {
+                bottom: 100vh;
+                opacity: 0.8;
+                transform: scale(1);
+            }
+        }
+
+        @keyframes bubble-sway {
+            from {
+                transform: translateX(-10px);
+            }
+            to {
+                transform: translateX(10px);
+            }
+        }
+
+        /* 立体文字样式 */
+        .char-wrapper {
+            display: inline-block;
+            overflow: hidden;
+            height: 60px;
+            vertical-align: bottom;
+        }
+
+        .floating-char {
+            display: inline-block;
+            font-size: 48px;
+            color: #734f96;
+            text-shadow: 2px 2px 0 #e0e0e0, 4px 4px 0 rgba(0, 0, 0, 0.1);
+            transform: translateY(100%);
+            opacity: 0;
+            animation: floatIn 0.5s ease-out forwards;
+            font-weight: bold;
+        }
+
+        .name-text .floating-char {
+            font-size: 36px;
+            color: #5a3377;
+        }
+
+        @keyframes floatIn {
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+        
+        .wish-container {
+            margin-top: 10px;
+        }
+
+        /* 音乐控制按钮 */
+        .music-control {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            background: rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(5px);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            z-index: 10;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .music-control:hover {
+            transform: scale(1.1);
+            background: rgba(255, 255, 255, 0.5);
+        }
+
+        .music-icon {
+            color: white;
+            font-size: 20px;
+        }
+
+        /* 烟花粒子 */
+        .particle {
+            position: absolute;
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            pointer-events: none;
+            animation: particle-fall 1s ease-out forwards;
+        }
+
+        @keyframes particle-fall {
+            0% {
+                transform: translate(0, 0);
+                opacity: 1;
+            }
+            100% {
+                transform: translate(var(--tx), var(--ty));
+                opacity: 0;
+            }
+        }
+
+        /* 响应式调整 */
+        @media (max-width: 600px) {
+            .floating-char {
+                font-size: 36px;
+            }
+            .name-text .floating-char {
+                font-size: 28px;
+            }
+            .cake {
+                width: 240px;
+                height: 150px;
+            }
+            .cake-top {
+                width: 160px;
+                left: 40px;
+            }
+            .cake-body {
+                width: 160px;
+                left: 40px;
+            }
+            .icing {
+                width: 160px;
+                left: 40px;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+    <div id="bubbles-container"></div>
+    <div id="fireworks-container"></div>
+    
+    <div class="content-wrapper">
+        <div class="text-container">
+            <div id="name-text" class="name-text"></div>
+            <div id="wish-text" class="wish-container"></div>
+        </div>
+        
+        <div class="cake-container">
+            <div class="cake" id="cake">
+                <div class="cake-top"></div>
+                <div class="cake-body"></div>
+                <div class="icing"></div>
+                <!-- 蜡烛固定在蛋糕上 -->
+                <div class="candle">
+                    <div class="flame"></div>
+                </div>
+                <!-- 糖珠 - 使用不同颜色 -->
+                <div class="sprinkle" style="top: 13%; left: 18%; background-color: #74b9ff;"></div>
+                <div class="sprinkle" style="top: 23%; left: 28%; background-color: #55efc4;"></div>
+                <div class="sprinkle" style="top: 33%; left: 38%; background-color: #a29bfe;"></div>
+                <div class="sprinkle" style="top: 43%; left: 49%; background-color: #ffeaa7;"></div>
+                <div class="sprinkle" style="top: 53%; left: 60%; background-color: #fd79a8;"></div>
+                <div class="sprinkle" style="top: 63%; left: 70%; background-color: #81ecec;"></div>
+                <div class="sprinkle" style="top: 72%; left: 80%; background-color: #fab1a0;"></div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="music-control" id="musicControl">
+        <i class="fas fa-music music-icon"></i>
+    </div>
+    
+    <audio id="birthday-song" loop>
+        <source src="https://wwal.lanzouw.com/iZkFI2xmycuj" type="audio/mpeg">
+        <!-- 替换为你的生日快乐歌链接 -->
+    </audio>
+    
+    <script>
+        // 创建星星
+        const numStars = 30;
+        for (let i = 0; i < numStars; i++) {
+            const star = document.createElement('div');
+            star.classList.add('star');
+            star.style.left = Math.random() * 100 + '%';
+            star.style.animationDuration = (Math.random() * 3 + 2) + 's';
+            star.style.animationDelay = Math.random() * 2 + 's';
+            star.style.width = (Math.random() * 5 + 3) + 'px';
+            star.style.height = star.style.width;
+            document.body.appendChild(star);
+        }
+
+        // 创建泡泡
+        const bubblesContainer = document.getElementById('bubbles-container');
+        const numBubbles = 40;
+
+        for (let i = 0; i < numBubbles; i++) {
+            const bubble = document.createElement('div');
+            bubble.classList.add('bubble');
+            bubble.style.left = Math.random() * 100 + '%';
+            const size = Math.random() * 30 + 10;
+            bubble.style.width = size + 'px';
+            bubble.style.height = size + 'px';
+            bubble.style.animationDelay = Math.random() * 3 + 's';
+            bubble.style.animationDuration = (5 + Math.random() * 3) + 's';
+            bubble.style.opacity = Math.random() * 0.5 + 0.3;
+            bubblesContainer.appendChild(bubble);
+        }
+
+        // 烟花效果
+        function createFirework(x, y) {
+            const colors = ['#ff0000', '#ffff00', '#00ff00', '#00ffff', '#0000ff', '#ff00ff'];
+            const container = document.getElementById('fireworks-container');
+            
+            for (let i = 0; i < 100; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+                
+                // 随机角度和距离
+                const angle = Math.random() * Math.PI * 2;
+                const distance = Math.random() * 100 + 50;
+                
+                // 计算最终位置
+                const tx = Math.cos(angle) * distance;
+                const ty = Math.sin(angle) * distance;
+                
+                particle.style.setProperty('--tx', tx + 'px');
+                particle.style.setProperty('--ty', ty + 'px');
+                particle.style.left = x + 'px';
+                particle.style.top = y + 'px';
+                particle.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                particle.style.animationDelay = (Math.random() * 0.2) + 's';
+                particle.style.width = (Math.random() * 4 + 3) + 'px';
+                particle.style.height = particle.style.width;
+                
+                container.appendChild(particle);
+                
+                // 移除粒子
+                setTimeout(() => {
+                    particle.remove();
+                }, 1000);
+            }
+        }
+
+        // 随机放烟花
+        function randomFirework() {
+            const x = Math.random() * window.innerWidth;
+            const y = Math.random() * window.innerHeight * 0.6; // 避免在蛋糕区域放烟花
+            createFirework(x, y);
+            
+            // 随机时间间隔放下一个烟花
+            setTimeout(randomFirework, Math.random() * 2000 + 1000);
+        }
+
+        // 音乐控制
+        const audio = document.getElementById('birthday-song');
+        const musicControl = document.getElementById('musicControl');
+        let isPlaying = false;
+
+        // 点击页面任意位置开始播放音乐
+        document.addEventListener('click', function() {
+            if (!isPlaying) {
+                audio.play()
+                    .then(() => {
+                        isPlaying = true;
+                        musicControl.innerHTML = '<i class="fas fa-pause music-icon"></i>';
+                        // 开始放烟花
+                        randomFirework();
+                    })
+                    .catch(error => {
+                        console.log('自动播放失败:', error);
+                        // 显示提示让用户点击音乐按钮
+                        musicControl.innerHTML = '<i class="fas fa-exclamation music-icon"></i>';
+                        musicControl.title = "点击播放音乐";
+                    });
+            }
+        }, { once: true });
+
+        // 音乐控制按钮
+        musicControl.addEventListener('click', function(e) {
+            e.stopPropagation();
+            if (isPlaying) {
+                audio.pause();
+                musicControl.innerHTML = '<i class="fas fa-music music-icon"></i>';
+            } else {
+                audio.play();
+                musicControl.innerHTML = '<i class="fas fa-pause music-icon"></i>';
+            }
+            isPlaying = !isPlaying;
+        });
+
+        // 显示文字
+        setTimeout(() => {
+            const name = '李筱柯';
+            const wish = '生日快乐';
+            const nameText = document.getElementById('name-text');
+            const wishText = document.getElementById('wish-text');
+
+            function showText(text, container, delay = 300) {
+                return new Promise((resolve) => {
+                    text.split('').forEach((char, index) => {
+                        const charWrapper = document.createElement('div');
+                        charWrapper.classList.add('char-wrapper');
+                        
+                        const floatingChar = document.createElement('span');
+                        floatingChar.classList.add('floating-char');
+                        floatingChar.textContent = char;
+                        floatingChar.style.animationDelay = (index * 0.15) + 's';
+                        
+                        charWrapper.appendChild(floatingChar);
+                        container.appendChild(charWrapper);
+                        
+                        // 最后一个字符动画结束后resolve
+                        if (index === text.length - 1) {
+                            setTimeout(resolve, (index * 0.15 * 1000) + 500);
+                        }
+                    });
+                });
+            }
+
+            // 显示名字
+            showText(name, nameText)
+                .then(() => {
+                    // 名字显示完后显示祝福语
+                    return showText(wish, wishText);
+                })
+                .then(() => {
+                    // 文字全部显示完后，蛋糕可点击
+                    const cake = document.getElementById('cake');
+                    cake.addEventListener('click', function() {
+                        // 点击蛋糕放烟花
+                        const rect = cake.getBoundingClientRect();
+                        createFirework(rect.left + rect.width/2, rect.top);
+                        
+                        // 1秒后跳转到新页面（给烟花效果留出时间）
+                        setTimeout(() => {
+                            window.location.href = 'LetterofLxk.html';
+                        }, 1000);
+                    });
+                });
+        }, 1000);
+    </script>
+</body>
+
+</html>
