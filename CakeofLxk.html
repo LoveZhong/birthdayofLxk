@@ -143,7 +143,7 @@
             width: 15px;
             height: 60px;
             background: linear-gradient(to bottom, #ff6b6b, #ff8e8e);
-            bottom: 180px;
+            bottom: calc(100% - 25px); /* 调整蜡烛位置，使其底部位于白色奶油上 */
             left: 50%;
             transform: translateX(-50%);
             border-radius: 8px;
@@ -272,7 +272,7 @@
         }
 
         .name-text .floating-char {
-            font-size: 36px;
+            font-size: 48px;
             color: #5a3377;
         }
 
@@ -361,6 +361,10 @@
                 width: 160px;
                 left: 40px;
             }
+            .candle {
+                height: 50px; /* 移动端调整蜡烛高度 */
+                bottom: calc(100% - 25px);
+            }
         }
     </style>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -402,7 +406,8 @@
     </div>
     
     <audio id="birthday-song" loop>
-        <source src="https://wwal.lanzouw.com/iZkFI2xmycuj" type="audio/mpeg">
+        <!-- 使用可靠的音乐链接 -->
+        <source src=" https://lovezhong.github.io/birthday/happybirthday.mp3" type="audio/mpeg">
         <!-- 替换为你的生日快乐歌链接 -->
     </audio>
     
